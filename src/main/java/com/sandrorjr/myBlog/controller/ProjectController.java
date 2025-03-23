@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -37,7 +36,7 @@ public class ProjectController {
         projectRepository.save(project);
         return project;
     }
-    @PostMapping
+    @PostMapping("projects")
     public List<ProjectModel> saveProject(@RequestBody List<ProjectModel> project){
         projectRepository.saveAll(project);
         return project;
