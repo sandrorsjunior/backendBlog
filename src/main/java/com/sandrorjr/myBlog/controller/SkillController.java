@@ -1,5 +1,6 @@
 package com.sandrorjr.myBlog.controller;
 
+import com.sandrorjr.myBlog.model.ProjectModel;
 import com.sandrorjr.myBlog.model.SkillModel;
 import com.sandrorjr.myBlog.repository.SkillRepository;
 import lombok.*;
@@ -21,6 +22,11 @@ public class SkillController {
         return this.skillRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public SkillModel getSkillById(@PathVariable("id") UUID id){;
+        return skillRepository.findById(id).orElse(null);
+    }
+
     @PostMapping
     public SkillModel saveSkill(@RequestBody SkillModel skill){
         skillRepository.save(skill);
@@ -34,13 +40,13 @@ public class SkillController {
     }
 
     @DeleteMapping("/{id}")
-    public UUID deleteSkillById(@PathVariable UUID id){
+    public UUID deleteSkillById(@PathVariable("id") UUID id){
         skillRepository.deleteById(id);
         return id;
     }
 
     @PutMapping("/{id}")
-    public SkillModel updateSkill(@PathVariable UUID id,
+    public SkillModel updateSkill(@PathVariable("id") UUID id,
                                   @RequestBody SkillModel newSkill){
         newSkill.setId(id);
         skillRepository.save(newSkill);
