@@ -1,6 +1,5 @@
 package com.sandrorjr.myBlog.controller;
 
-import com.sandrorjr.myBlog.model.ProjectModel;
 import com.sandrorjr.myBlog.model.SkillModel;
 import com.sandrorjr.myBlog.repository.SkillRepository;
 import lombok.*;
