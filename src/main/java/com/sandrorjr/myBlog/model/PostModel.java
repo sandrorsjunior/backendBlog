@@ -4,14 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ArticleModel")
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class PostModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,8 +20,8 @@ public class PostModel {
     private String title;
     private String writer;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TagOfPost> tags;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<TagModel> tags;
 
     @Column(columnDefinition = "TEXT")
     private String htmlContent;
@@ -32,5 +33,4 @@ public class PostModel {
     @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
-
 }
