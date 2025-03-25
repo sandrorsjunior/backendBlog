@@ -1,14 +1,13 @@
 package com.sandrorjr.myBlog.controller;
 
+import com.sandrorjr.myBlog.model.ProjectModel;
 import com.sandrorjr.myBlog.model.TagModel;
 import com.sandrorjr.myBlog.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("tag")
@@ -20,14 +19,29 @@ public class TagController {
     public List<TagModel> getAllTag(){
         return tagRepository.findAll();
     }
-    /*@PostMapping
-    public TagModel saveTag(TagModel tag){
-        tagRepository.save(tag);
-        return tag;
-    }*/
+
+    @GetMapping("/{id}")
+    public TagModel getTagById(@PathVariable("id") UUID id){;
+        return tagRepository.findById(id).orElse(null);
+    }
+
+
     @PostMapping
-    public List<TagModel> saveTag(List<TagModel> tags){
+    public List<TagModel> saveTag(@RequestBody List<TagModel> tags){
         tagRepository.saveAll(tags);
         return tags;
+    }
+
+    @PutMapping("/{id}")
+    public TagModel updateTag(@PathVariable("id") UUID id, @RequestBody TagModel tag){
+        tag.setId(id);
+        tagRepository.save(tag);
+        return tag;
+    }
+
+    @DeleteMapping("/{id}")
+    public UUID deleteTag(@PathVariable("id") UUID id){
+        tagRepository.deleteById(id);
+        return id;
     }
 }

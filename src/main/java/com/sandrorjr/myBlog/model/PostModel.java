@@ -20,7 +20,12 @@ public class PostModel {
     private String title;
     private String writer;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<TagModel> tags;
 
     @Column(columnDefinition = "TEXT")
@@ -33,4 +38,8 @@ public class PostModel {
     @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
+
+    public void addTags(TagModel tag){
+        this.tags.add(tag);
+    }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,10 +15,9 @@ public class TagModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_post")
+    @ManyToMany(mappedBy = "tags")
     @JsonIgnore
-    private PostModel post;
+    private List<PostModel> post;
     @Enumerated(EnumType.STRING)
     private PostTagsEnum tag;
 
