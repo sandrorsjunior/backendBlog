@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,4 +22,10 @@ public class TagModel {
     @Enumerated(EnumType.STRING)
     private PostTagsEnum tag;
 
+    public void addPost(PostModel post){
+        if(this.getPost()==null){
+            this.setPost(new ArrayList<PostModel>());
+        }
+        this.post.add(post);
+    }
 }

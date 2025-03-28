@@ -1,5 +1,7 @@
 package com.sandrorjr.myBlog.controller;
 
+import com.sandrorjr.myBlog.DTO.TagDTO;
+import com.sandrorjr.myBlog.model.PostModel;
 import com.sandrorjr.myBlog.model.ProjectModel;
 import com.sandrorjr.myBlog.model.TagModel;
 import com.sandrorjr.myBlog.repository.TagRepository;
@@ -16,9 +18,10 @@ public class TagController {
     private TagRepository tagRepository;
 
     @GetMapping
-    public List<TagModel> getAllTag(){
-        return tagRepository.findAll();
+    public List<TagDTO> getAllTag(){
+        return tagRepository.getAllTag();
     }
+
 
     @GetMapping("/{id}")
     public TagModel getTagById(@PathVariable("id") UUID id){;
@@ -44,4 +47,5 @@ public class TagController {
         tagRepository.deleteById(id);
         return id;
     }
+
 }

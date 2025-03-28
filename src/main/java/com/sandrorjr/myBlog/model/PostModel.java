@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +41,9 @@ public class PostModel {
     private LocalDateTime dataAtualizacao;
 
     public void addTags(TagModel tag){
+        if(this.getTags()==null){
+            this.setTags(new ArrayList<TagModel>());
+        }
         this.tags.add(tag);
     }
 }

@@ -9,6 +9,7 @@ import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,23 +39,27 @@ public class PostController {
     @PostMapping
     public PostModel savePost(@RequestBody PostDTO post){
         PostModel newPost = new PostModel();
-        newPost.setId(UUID.randomUUID());
         newPost.setTitle(post.getTitle());
         newPost.setWriter(post.getWriter());
         newPost.setHtmlContent(post.getHtmlContent());
-        try {
-            TagModel tag = tagRepository.findById(post.getTags()).orElse(null);
-            if(tag == null){
-                System.out.println("shit");
-                return null;
+        if(!post.getTags().isEmpty()){
+            for(UUID tagId: post.getTags()){
+                try {
+                    TagModel tag = tagRepository.findById(tagId).orElse(null);
+                    if(tag == null){
+                        System.out.println("shit");
+                        return null;
+                    }
+                    newPost.addTags(tag);
+                    postRepository.save(newPost);
+                    tag.addPost(newPost);
+                    tagRepository.save(tag);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-            newPost.addTags(tag);
-            postRepository.save(newPost);
-            return newPost;
-        }catch (Exception e){
-            e.printStackTrace();
         }
-        return null;
+        return newPost;
     }
 
     @PutMapping("/{id}")

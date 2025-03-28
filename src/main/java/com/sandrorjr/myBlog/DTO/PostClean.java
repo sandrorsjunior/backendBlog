@@ -4,11 +4,10 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
-
 @Data
-public class PostDTO {
+public class PostClean {
+    private UUID id;
     private String title;
     private String writer;
-    private List<UUID> tags;
-    private String htmlContent;
 }
+
