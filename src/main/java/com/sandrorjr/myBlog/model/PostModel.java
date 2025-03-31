@@ -21,13 +21,8 @@ public class PostModel {
     private String title;
     private String writer;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "post_tag",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<TagModel> tags;
+    @Enumerated(EnumType.STRING)
+    private List<PostTagsEnum> tags;
 
     @Column(columnDefinition = "TEXT")
     private String htmlContent;
@@ -39,11 +34,4 @@ public class PostModel {
     @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
-
-    public void addTags(TagModel tag){
-        if(this.getTags()==null){
-            this.setTags(new ArrayList<TagModel>());
-        }
-        this.tags.add(tag);
-    }
 }

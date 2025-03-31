@@ -21,6 +21,8 @@ public class SkillModel {
     private String name;
     private String logo;
     private String level;
+    @Enumerated(EnumType.STRING)
+    private SkillFlagEnum flag;
 
     @CreatedDate
     @Column(name = "data_cadastro")

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@CrossOrigin
 @RestController
 @RequestMapping("skill")
 public class SkillController {

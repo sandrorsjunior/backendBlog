@@ -1,5 +1,6 @@
 package com.sandrorjr.myBlog.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,7 +21,10 @@ public class ProjectModel {
     private String logoSrc;
     private String title;
     private String Description;
-    private String Link;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private PostModel post;
 
     @CreatedDate
     @Column(name = "data_cadastro")

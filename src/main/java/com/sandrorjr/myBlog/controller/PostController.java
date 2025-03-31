@@ -1,26 +1,24 @@
 package com.sandrorjr.myBlog.controller;
 
-import com.sandrorjr.myBlog.DTO.PostDTO;
 import com.sandrorjr.myBlog.model.PostModel;
-import com.sandrorjr.myBlog.model.TagModel;
 import com.sandrorjr.myBlog.repository.PostRepository;
-import com.sandrorjr.myBlog.repository.TagRepository;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping("postArticle")
 public class PostController {
     @Autowired
     private PostRepository postRepository;
-    @Autowired
-    private TagRepository tagRepository;
 
     @GetMapping
     public List<PostModel> getAllPost(){
@@ -28,47 +26,31 @@ public class PostController {
     }
 
     @GetMapping("{id}")
-    public PostModel findPostById(@PathParam("id") UUID id) throws Exception {
+    public PostModel findPostById(@PathParam("id") UUID id) throws ResponseStatusException {
         Optional<PostModel> post = postRepository.findById(id);
         if(post.isPresent()){
             return post.get();
         }else{
-            throw new Exception("shit");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + id);
         }
     }
     @PostMapping
-    public PostModel savePost(@RequestBody PostDTO post){
-        PostModel newPost = new PostModel();
-        newPost.setTitle(post.getTitle());
-        newPost.setWriter(post.getWriter());
-        newPost.setHtmlContent(post.getHtmlContent());
-        if(!post.getTags().isEmpty()){
-            for(UUID tagId: post.getTags()){
-                try {
-                    TagModel tag = tagRepository.findById(tagId).orElse(null);
-                    if(tag == null){
-                        System.out.println("shit");
-                        return null;
-                    }
-                    newPost.addTags(tag);
-                    postRepository.save(newPost);
-                    tag.addPost(newPost);
-                    tagRepository.save(tag);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        return newPost;
+    public PostModel savePost(@RequestBody PostModel post){
+        postRepository.save(post);
+        return post;
     }
 
     @PutMapping("/{id}")
     public PostModel updatePost(@PathVariable("id") UUID id, @RequestBody PostModel post) {
         try{
-            PostModel postSaved = this.findPostById(id);
-            post.setId(id);
-            postRepository.save(post);
-        }catch (Exception e){
+            PostModel oldPost = this.findPostById(id);
+            oldPost.setWriter(post.getWriter());
+            oldPost.setTitle(post.getTitle());
+            oldPost.setTags(post.getTags());
+            oldPost.setHtmlContent(post.getHtmlContent());
+            postRepository.save(oldPost);
+            return oldPost;
+        }catch (ResponseStatusException e){
             e.printStackTrace();
         }
         return null;
