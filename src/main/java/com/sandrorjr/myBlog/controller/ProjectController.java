@@ -1,10 +1,13 @@
 package com.sandrorjr.myBlog.controller;
 
+import com.sandrorjr.myBlog.dto.responseProject;
 import com.sandrorjr.myBlog.model.ProjectModel;
 import com.sandrorjr.myBlog.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,8 +19,21 @@ public class ProjectController {
     private ProjectRepository projectRepository;
 
     @GetMapping
-    public List<ProjectModel> getAllProject(){
-        return projectRepository.findAll();
+    public List<responseProject> getAllProject(){
+        List<responseProject> response = new ArrayList<>();
+        for(ProjectModel  project: projectRepository.findAll()){
+            responseProject responseItem = new responseProject(
+                    project.getId(),
+                    project.getLogoSrc(),
+                    project.getTitle(),
+                    project.getDescription(),
+                    project.getPost().getId(),
+                    project.getDataCadastro(),
+                    project.getDataAtualizacao()
+            );
+            response.add(responseItem);
+        }
+        return response;
     }
 
     @GetMapping("/{id}")

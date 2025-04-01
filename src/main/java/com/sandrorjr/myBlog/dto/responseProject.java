@@ -7,13 +7,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 public record responseProject(
         UUID id,
         String logoSrc,
         String title,
         String Description,
-        String post,
+        UUID post,
         LocalDateTime dataCadastro,
         LocalDateTime dataAtualizacao
 ) {
