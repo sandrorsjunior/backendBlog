@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @CrossOrigin
 @RestController
-@RequestMapping("postArticle")
+@RequestMapping("/postArticle")
 public class PostController {
     @Autowired
     private PostRepository postRepository;
@@ -26,13 +26,14 @@ public class PostController {
     }
 
     @GetMapping("{id}")
-    public PostModel findPostById(@PathParam("id") UUID id) throws ResponseStatusException {
-        Optional<PostModel> post = postRepository.findById(id);
-        if(post.isPresent()){
-            return post.get();
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + id);
+    public PostModel findPostById(@PathVariable("id") UUID id) {
+        try{
+            return this.searchPostById(id);
+        } catch (ResponseStatusException e) {
+            e.printStackTrace();
         }
+        return null;
+
     }
     @PostMapping
     public PostModel savePost(@RequestBody PostModel post){
@@ -43,7 +44,7 @@ public class PostController {
     @PutMapping("/{id}")
     public PostModel updatePost(@PathVariable("id") UUID id, @RequestBody PostModel post) {
         try{
-            PostModel oldPost = this.findPostById(id);
+            PostModel oldPost = this.searchPostById(id);
             oldPost.setWriter(post.getWriter());
             oldPost.setTitle(post.getTitle());
             oldPost.setTags(post.getTags());
@@ -60,5 +61,14 @@ public class PostController {
     public UUID deletePost(@PathVariable("id") UUID id){
         postRepository.deleteById(id);
         return id;
+    }
+
+    public PostModel searchPostById(UUID id) throws ResponseStatusException {
+        Optional<PostModel> post = postRepository.findById(id);
+        if(post.isPresent()){
+            return post.get();
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + id);
+        }
     }
 }
